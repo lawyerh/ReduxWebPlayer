@@ -3,13 +3,12 @@ import ReactDOM from 'react-dom'; //import ReactDOM library
 import YTSearch from 'youtube-api-search' //import youtube search functionality
 
 import SearchBar from './components/search_bar';
-import VideoList from './components/video_list'
+import VideoList from './components/video_list';
+import VideoDetail from './components/video_detail'
 
 const API_KEY = 'AIzaSyCyxFPrnhsxFCQX0mJcvl2KTYN0Myd8HD0';
 
-YTSearch({key: API_KEY, term: 'Avenged Sevenfold'},function(data){
-    console.log(data)
-});
+
 
 //Create new components. Components are reusable blocks of code that produce HTML.
 
@@ -18,17 +17,35 @@ class App extends React.Component  //This is a class.
     constructor(props){
         super(props);
 
-        this.state={ videos: [] } // make a state variable to hold videos
+        this.state={ 
+            videos: [],
+            selectedVideo: null
+         } // make a state variable to hold videos
 
-        YTSearch({key: API_KEY, term: 'Avenged Sevenfold'}, (videos) => { // make a call to YT to populate videos
-            this.setState({videos})
+        YTSearch({key: API_KEY, term: 'Bunnies'}, (videos) => { // make a call to YT to populate videos
+            this.setState({ 
+                videos: videos,
+                selectedVideo: videos[0]
+            });
         });
+
+
     }
     render(){
         return(
             <div>
-                <SearchBar/>
-                <VideoList videos={this.state.videos} />
+                <SearchBar onSearch={term => { //update the video search results based on user input
+                    YTSearch({key: API_KEY, term: term}, (videos) => {
+                        this.setState({
+                            videos: videos,
+                            selectedVideo: videos[0]
+                        });
+                    });
+                }} />
+                <VideoDetail video={this.state.selectedVideo} />
+                <VideoList
+                 onVideoSelect={selectedVideo => this.setState({selectedVideo})} // onVideoSelect defined in index.js
+                 videos={this.state.videos} />
             </div>
         );
     }
