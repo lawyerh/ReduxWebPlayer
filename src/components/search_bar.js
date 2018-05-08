@@ -9,7 +9,7 @@ class SearchBar extends Component{
 
     render(){
         return  (   
-                    <div>
+                    <div className={'col-12'}>
                         <div className={'search-bar'}>
                             <input
                             value = {this.state.term}

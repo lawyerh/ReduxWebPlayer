@@ -22,30 +22,29 @@ class App extends React.Component  //This is a class.
             selectedVideo: null
          } // make a state variable to hold videos
 
-        YTSearch({key: API_KEY, term: 'Bunnies'}, (videos) => { // make a call to YT to populate videos
+        this.videoSearch('bunnies');
+    }
+
+    videoSearch(term){
+        YTSearch({key: API_KEY, term: term}, (videos) => { // make a call to YT to populate videos
             this.setState({ 
                 videos: videos,
                 selectedVideo: videos[0]
             });
         });
-
-
     }
     render(){
         return(
-            <div>
+            <div className={'row'}>
                 <SearchBar onSearch={term => { //update the video search results based on user input
-                    YTSearch({key: API_KEY, term: term}, (videos) => {
-                        this.setState({
-                            videos: videos,
-                            selectedVideo: videos[0]
-                        });
-                    });
+                    this.videoSearch(term);
                 }} />
-                <VideoDetail video={this.state.selectedVideo} />
-                <VideoList
-                 onVideoSelect={selectedVideo => this.setState({selectedVideo})} // onVideoSelect defined in index.js
-                 videos={this.state.videos} />
+                <div className={'row'}>
+                    <VideoDetail video={this.state.selectedVideo} />
+                    <VideoList
+                    onVideoSelect={selectedVideo => this.setState({selectedVideo})} // onVideoSelect defined in index.js
+                    videos={this.state.videos} />
+                </div>
             </div>
         );
     }
